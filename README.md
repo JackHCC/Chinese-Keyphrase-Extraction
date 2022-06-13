@@ -2,6 +2,8 @@
 
 无监督学习：中文关键词抽取（Keyphrase Extraction），基于LDA与PageRank（TextRank， TPR， Salience Rank， Single TPR）
 
+英文Keyphrase Extraction参考：https://github.com/JackHCC/Keyphrase-Extraction
+
 ## Introduction
 
 |   Algorithm   |                        Intro                        |                             ref                              |
@@ -13,12 +15,20 @@
 
 ## Dependencies
   - sklearn
-  - jieba  0.42.1
-  - networkx 2.5
-  - numpy 1.20.1
-  - pandas 1.2.4
-  - matplotlib 3.3.4
-  - queue 0.6.3
+  - jieba==0.42.1
+  - networkx==2.5
+  - numpy==1.20.1
+  - pandas==1.2.4
+  - matplotlib==3.3.4
+  - queue==0.6.3
+
+## File
+
+- `main.py`：主程序入口
+- `process.py`：数据预处理和配置加载
+- `lda.py`：潜在迪利克雷分配
+- `ranks.py`：Topic PageRank算法实现
+- `utils.py`：工具函数
 
 ## Data
 
@@ -26,21 +36,35 @@
 
 数据集位于`data/data.xlsx`下，由两列组成，第一列content存放新闻标题和新闻的正文内容，第二列是type是该新闻的话题类型。
 
-在模型训练过程只需要利用excel文件中的content列，第二列是根据提取的关键词来衡量提取的准确性。
+在模型训练过程只需要利用excel文件中的`content`列，第二列是根据提取的关键词来衡量提取的准确性。
 
 ### 如何使用自己的数据
 
-按照`data.xlsx`的数据格式放置你的数据，只需要content列即可。
+按照`data.xlsx`的数据格式放置你的数据，只需要`content`列即可。
 
 ## Config
 
 `config`目录下可以配置：
 
-- `jieba`分词库的自定义词典`jieba_user_dict.txt`
+- `jieba`分词库的自定义词典`jieba_user_dict.txt`，具体参考：[Jieba](https://github.com/fxsjy/jieba#%E8%BD%BD%E5%85%A5%E8%AF%8D%E5%85%B8)
 - 添加停用词（stopwords）`stop_words.txt`
+- 添加词性配置`POS_dict.txt`，即设置提取最终关键词的词性筛选，具体词性表参考：[词性表](https://blog.csdn.net/Yellow_python/article/details/83991967)
 
 ## Usage
+
+### Install
+
+```shell
+git clone https://github.com/JackHCC/Chinese-Keyphrase-Extraction.git
+
+cd Chinese-Keyphrase-Extraction
+
+pip install -r requirements.txt
 ```
+
+### Run
+
+```shell
 # TextRank
 python main.py --alg text_rank
 # TPR
@@ -50,6 +74,18 @@ python main.py --alg single_tpr
 # Salience Rank
 python main.py
 ```
+
+## Custom
+
+```shell
+python main.py --alg salience_rank --data ./data/data.xlsx --topic_num 10 --top_k 20 --alpha 0.2
+```
+
+- `alg`：选择Top PageRank算法，提供四种选择：`text_rank`, `tpr`, `single_tpr`, `salience_rank`
+- `data`：训练数据集路径
+- `topic_num`：确定潜在迪利克雷分配的主题数量
+- `top_k`：每个文档提取关键词的数量
+- `alpha`：`salience_rank`算法的超参数，用于控制语料库特异性和话题特异性之间的权衡，取值位于0到1之间，越趋近于1，话题特异性越明显，越趋近于0，语料库特异性越明显
 
 ## Result
 
@@ -68,6 +104,8 @@ python main.py
 9  :  湖人;比赛;球队;后卫;揭幕战;沙农;时间;出场;阵容;板凳;火力;外线;念头;贡献;证明
 10  :  公牛;球员;球队;教练;数据;比赛;能力;体系;主教练;命中率;交流;研究;水平;记者;小时
 ```
+
+- 最终提取结果写入excel表格中，具体在`result`目录下。
 
 ## Reference
 

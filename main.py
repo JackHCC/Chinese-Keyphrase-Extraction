@@ -26,7 +26,8 @@ def args():
     parser.add_argument("--data", default="./data/data.xlsx", type=str, help="Train dataset path")
     parser.add_argument("--topic_num", default=8, type=int, help="Topic numbers")
     parser.add_argument("--top_k", default=15, type=int, help="Keyphrase Extraction Number")
-    parser.add_argument("--alpha", default=0.3, type=float, help="A hyperparameter for salience_rank algorithm")
+    parser.add_argument("--alpha", default=0.3, type=float,
+                        help="A hyperparameter for salience_rank algorithm, between 0 and 1")
     args = parser.parse_args()
     return args
 

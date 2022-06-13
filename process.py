@@ -20,9 +20,15 @@ CONFIG_PATH = os.path.join(ROOT_PATH, 'config')
 DATA_PATH = os.path.join(ROOT_PATH, 'data')
 JIEBA_USER_DICT = os.path.join(CONFIG_PATH, 'jieba_user_dict.txt')
 STOP_WORDS = os.path.join(CONFIG_PATH, 'stop_words.txt')
+POS_DICT = os.path.join(CONFIG_PATH, 'POS_dict.txt')
 
-# 名词flag
-FLAG_LIST = ['n', 'nl', 'nz', 'vn']
+# 加载词性筛选配置
+FLAG_LIST = []
+with open(POS_DICT, 'r', encoding='utf-8') as f:
+    for line in f.readlines():
+        line = line.strip()
+        FLAG_LIST.append(line)
+print(FLAG_LIST)
 
 
 def chinese_word_cut(article):

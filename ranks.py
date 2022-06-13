@@ -137,8 +137,18 @@ def salience_rank(topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, te
         else:
             personalization[n] = 0
         count = count + 1
+
     # score nodes using default pagerank algorithm, sort by score, keep top n_keywords
     ranks = networkx.pagerank(graph, 0.85, personalization)
+
+    # Paper: https://aclanthology.org/P17-2084/
+    # ranks = networkx.pagerank(graph, 0.95, None, 1, 5.0e-1)
+    # scores = {}
+    # lamb = 0.7
+    # assert len(ranks) == len(personalization)
+    # for key, value in ranks.items():
+    #     scores[key] = lamb * ranks[key] + (1 - lamb) * personalization[key]
+    # ranks = scores
 
     sorted_ranks = sorted(ranks.items(), key=lambda x: x[1], reverse=True)
     return sorted_ranks

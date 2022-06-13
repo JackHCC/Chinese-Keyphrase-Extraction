@@ -75,7 +75,7 @@ python main.py --alg single_tpr
 python main.py
 ```
 
-## Custom
+### Custom
 
 ```shell
 python main.py --alg salience_rank --data ./data/data.xlsx --topic_num 10 --top_k 20 --alpha 0.2

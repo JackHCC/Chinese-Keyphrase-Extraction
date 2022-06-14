@@ -16,6 +16,11 @@ from utils import set_graph_edges
 
 
 def text_rank(text):
+    """
+
+    @param text: list，分词后的文章输入
+    @return: 该文档的关键词汇得分排序列表
+    """
     words = text
 
     graph = networkx.Graph()
@@ -30,6 +35,15 @@ def text_rank(text):
 
 
 def tpr(topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, text, article_id):
+    """
+
+    @param topic_x_word_matrix: matrix，主题词汇分布矩阵（归一化后的）
+    @param docx_x_topic_matrix: matrix，文档主题分布矩阵（未归一化的）
+    @param tf_feature_names: list，词汇字典
+    @param text: list，分词后的文章输入
+    @param article_id: int，文章遍历过程的编号
+    @return: 该文档的关键词汇得分排序列表
+    """
     words = text
 
     graph = networkx.Graph()
@@ -70,6 +84,15 @@ def tpr(topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, text, articl
 
 
 def single_tpr(topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, text, article_id):
+    """
+
+    @param topic_x_word_matrix: matrix，主题词汇分布矩阵（归一化后的）
+    @param docx_x_topic_matrix: matrix，文档主题分布矩阵（未归一化的）
+    @param tf_feature_names: list，词汇字典
+    @param text: list，分词后的文章输入
+    @param article_id: int，文章遍历过程的编号
+    @return: 该文档的关键词汇得分排序列表
+    """
     words = text
 
     # set the graph edges
@@ -108,6 +131,16 @@ def single_tpr(topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, text,
 
 
 def salience_rank(topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, text, article_id, alpha=0.3):
+    """
+
+    @param topic_x_word_matrix: matrix，主题词汇分布矩阵（归一化后的）
+    @param docx_x_topic_matrix: matrix，文档主题分布矩阵（未归一化的）
+    @param tf_feature_names: list，词汇字典
+    @param text: list，分词后的文章输入
+    @param article_id: int，文章遍历过程的编号
+    @param alpha: float，salience_rank算法的参数，用于控制语料库特异性和话题特异性之间的权衡，取值位于0到1之间，越趋近于1，话题特异性越明显，越趋近于0，语料库特异性越明显
+    @return: 该文档的关键词汇得分排序列表
+    """
     # word输入的该id文档中获取的有效词语
     words = text
     # set the graph edges

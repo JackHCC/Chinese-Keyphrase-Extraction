@@ -1,10 +1,14 @@
-# Keyphrase Extraction Algorithm
+# Keyphrase Extraction Algorithm based on Graph
 
-无监督学习：中文关键词抽取（Keyphrase Extraction），基于LDA与PageRank（TextRank， TPR， Salience Rank， Single TPR）
+无监督学习的中文关键词抽取（Keyphrase Extraction）
 
-英文Keyphrase Extraction参考：https://github.com/JackHCC/Keyphrase-Extraction
+- 基于图：基于LDA与PageRank（TextRank， TPR， Salience Rank， Single TPR）
+  - 英文Keyphrase Extraction参考：https://github.com/JackHCC/Keyphrase-Extraction
+- 基于嵌入：Todo
 
 ## Introduction
+
+### Graph Based
 
 |   Algorithm   |                        Intro                        |                             ref                              |
 | :-----------: | :-------------------------------------------------: | :----------------------------------------------------------: |
@@ -13,7 +17,15 @@
 |  Single TPR   |            单词迭代计算的Topic  PageRank            | [paper](https://biblio.ugent.be/publication/5974208/file/5974209.pdf) |
 | Salience Rank |             引入显著性的Topic  PageRank             |         [paper](https://aclanthology.org/P17-2084/)          |
 
+### Embedding Based
+
+| Algorithm |                   Intro                    |                             ref                              |
+| :-------: | :----------------------------------------: | :----------------------------------------------------------: |
+|  SIFRank  | 基于预训练语言模型的无监督关键词提取新基线 | [paper](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8954611) |
+| SIFRank+  |            针对长文档的SIFRank             | [paper](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8954611) |
+
 ## Dependencies
+
   - sklearn
   - jieba==0.42.1
   - networkx==2.5
@@ -109,7 +121,8 @@ python main.py --alg salience_rank --data ./data/data.xlsx --topic_num 10 --top_
 
 ## Reference
 
-  - Text Rank: Mihalcea and Tarau. 2004. Textrank: Bringing order into texts.
-  - TPR: Liu et al. 2010. Automatic keyphrase extraction via topic decomposition.
-  - Single TPR: Sterckx et al. 2015. Topical word importance for fast keyphrase extraction.
-  - Salience Rank: Nedelina et al . 2017.Salience Rank: Efficient Keyphrase Extraction with Topic Modeling.
+  - **Text Rank:** Mihalcea and Tarau. 2004. Textrank: Bringing order into texts.
+  - **TPR:** Liu et al. 2010. Automatic keyphrase extraction via topic decomposition.
+  - **Single TPR:** Sterckx et al. 2015. Topical word importance for fast keyphrase extraction.
+  - **Salience Rank:** Nedelina et al . 2017.Salience Rank: Efficient Keyphrase Extraction with Topic Modeling.、
+  - **SIFRank:** Y. Sun, H. Qiu, Y. Zheng, Z. Wang and C. Zhang, "SIFRank: A New Baseline for Unsupervised Keyphrase Extraction Based on Pre-Trained Language Model"

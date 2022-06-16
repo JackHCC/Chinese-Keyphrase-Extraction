@@ -20,7 +20,7 @@
 - 基于嵌入：EmbedRank， Reference Vector Algorithm (RVA)，SIFRank
 - 基于语言模型：N-gram
 
-![](./image/Unsupervised Methods.png)
+![](./image/Unsupervised-Methods.png)
 
 ## Introduction
 

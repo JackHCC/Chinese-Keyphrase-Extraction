@@ -10,6 +10,8 @@
 '''
 from itertools import combinations as combinations
 from queue import Queue
+import time
+
 WINDOW_SIZE = 2
 
 
@@ -75,3 +77,11 @@ def write_to_excel(obj, save_path):
     obj.to_excel(save_path)
 
 
+def get_runtime(fn):
+    def wrapper(*args, **kwargs):
+        start_time = time.time()
+        results = fn(*args, **kwargs)
+        end_time = time.time()
+        print("程序运行时间: {} s".format(end_time - start_time))
+        return results
+    return wrapper

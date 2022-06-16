@@ -1,28 +1,59 @@
 # Keyphrase Extraction Algorithm based on Graph
 
-无监督学习的中文关键词抽取（Keyphrase Extraction）
+**无监督学习**的中文关键词抽取（Keyphrase Extraction）
 
-- 基于图：基于LDA与PageRank（TextRank， TPR， Salience Rank， Single TPR）
-  - 英文Keyphrase Extraction参考：https://github.com/JackHCC/Keyphrase-Extraction
-- 基于嵌入：Todo
+- 基于统计：TF-IDF，YAKE
+
+- 基于图：
+  - 基于统计：TextRank，SingleRank，SGRank，PositionRank
+  - 基于类似文件/引文网络：ExpandRank，CiteTextRank
+  - 基于主题：
+    - 基于聚类：TopicRank（TR）
+  
+    - 基于LDA：TPR（TopicPageRank）， Single TPR，Salience Rank
+      - 英文Keyphrase Extraction参考：https://github.com/JackHCC/Keyphrase-Extraction
+  
+  - 基于语义方法：
+    - 基于知识图谱：WikiRank
+    - 基于预训练词嵌入： theme-weighted PageRank 
+  
+- 基于嵌入：EmbedRank， Reference Vector Algorithm (RVA)，SIFRank
+- 基于语言模型：N-gram
+
+![](./image/Unsupervised Methods.png)
 
 ## Introduction
 
-### Graph Based
+### Statistics-based
 
-|   Algorithm   |                        Intro                        |                             ref                              |
-| :-----------: | :-------------------------------------------------: | :----------------------------------------------------------: |
-|   TextRank    |           将PageRank应用于文本关键词抽取            |        [paper](https://aclanthology.org/W04-3252.pdf)        |
-|      TPR      | 首次将主题（Topic）信息整合到 PageRank 计算的公式中 |        [paper](https://aclanthology.org/D10-1036.pdf)        |
-|  Single TPR   |            单词迭代计算的Topic  PageRank            | [paper](https://biblio.ugent.be/publication/5974208/file/5974209.pdf) |
-| Salience Rank |             引入显著性的Topic  PageRank             |         [paper](https://aclanthology.org/P17-2084/)          |
+| Algorithm |                            Intro                             | Year |                             ref                              |
+| :-------: | :----------------------------------------------------------: | :--: | :----------------------------------------------------------: |
+|  TF-IDF   | 一种用于信息检索与数据挖掘的常用加权技术，常用于挖掘文章中的关键词 | 1972 |     [link](https://en.wikipedia.org/wiki/Tf%E2%80%93idf)     |
+|   YAKE    |     首次将主题（Topic）信息整合到 PageRank 计算的公式中      | 2018 | [paper](https://repositorio.inesctec.pt/server/api/core/bitstreams/ef121a01-a0a6-4be8-945d-3324a58fc944/content) |
+
+### Graph-based
+
+|     Algorithm      |                            Intro                             | Year |                             ref                              |
+| :----------------: | :----------------------------------------------------------: | :--: | :----------------------------------------------------------: |
+|      TextRank      |           基于统计，将PageRank应用于文本关键词抽取           | 2004 |        [paper](https://aclanthology.org/W04-3252.pdf)        |
+|     SingleRank     |       基于统计，TextRank的一个扩展，它将权重合并到边上       | 2008 | [paper](https://www.aaai.org/Papers/AAAI/2008/AAAI08-136.pdf) |
+|       SGRank       |              基于统计，利用了统计和单词共现信息              | 2015 |        [paper](https://aclanthology.org/S15-1013.pdf)        |
+| PositionRank（PR） |   基于统计，利用了单词-单词共现及其在文本中的相应位置信息    | 2017 |        [paper](https://aclanthology.org/P17-1102.pdf)        |
+|     ExpandRank     | 基于类似文件/引文网络，SingleRank扩展，考虑了从相邻文档到目标文档的信息 | 2008 | [paper](https://www.aaai.org/Papers/AAAI/2008/AAAI08-136.pdf) |
+|    CiteTextRank    | 基于类似文件/引文网络，通过引文网络找到与目标文档更相关的知识背景 | 2014 | [paper](https://ojs.aaai.org/index.php/AAAI/article/view/8946) |
+|  TopicRank（TR）   |     基于主题，使用层次聚集聚类将候选短语分组为单独的主题     | 2013 | [paper](https://hal.archives-ouvertes.fr/hal-00917969/document) |
+|        TPR         | 基于主题，首次将主题（Topic）信息整合到 PageRank 计算的公式中 | 2010 |        [paper](https://aclanthology.org/D10-1036.pdf)        |
+|     Single TPR     |           基于主题，单词迭代计算的Topic  PageRank            | 2015 | [paper](https://biblio.ugent.be/publication/5974208/file/5974209.pdf) |
+|   Salience Rank    |            基于主题，引入显著性的Topic  PageRank             | 2017 |         [paper](https://aclanthology.org/P17-2084/)          |
+|      WikiRank      |      基于语义，构建一个语义图，试图将语义与文本联系起来      | 2018 |        [paper](https://arxiv.org/pdf/1803.09000.pdf)         |
 
 ### Embedding Based
 
-| Algorithm |                   Intro                    |                             ref                              |
-| :-------: | :----------------------------------------: | :----------------------------------------------------------: |
-|  SIFRank  | 基于预训练语言模型的无监督关键词提取新基线 | [paper](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8954611) |
-| SIFRank+  |            针对长文档的SIFRank             | [paper](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8954611) |
+|            Algorithm             |                            Intro                             | Year |                             ref                              |
+| :------------------------------: | :----------------------------------------------------------: | :--: | :----------------------------------------------------------: |
+|            EmbedRank             | 使用句子嵌入（Doc2Vec或Sent2vec）在同一高维向量空间中表示候选短语和文档 | 2018 |        [paper](https://arxiv.org/pdf/1801.04470.pdf)         |
+| Reference Vector Algorithm (RVA) | 使用局部单词嵌入/语义（Glove），即从考虑中的单个文档中训练的嵌入 | 2018 |        [paper](https://arxiv.org/pdf/1710.07503.pdf)         |
+|         SIFRank/SIFRank+         |          基于预训练语言模型的无监督关键词提取新基线          | 2020 | [paper](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8954611) |
 
 ## Dependencies
 
@@ -121,8 +152,4 @@ python main.py --alg salience_rank --data ./data/data.xlsx --topic_num 10 --top_
 
 ## Reference
 
-  - **Text Rank:** Mihalcea and Tarau. 2004. Textrank: Bringing order into texts.
-  - **TPR:** Liu et al. 2010. Automatic keyphrase extraction via topic decomposition.
-  - **Single TPR:** Sterckx et al. 2015. Topical word importance for fast keyphrase extraction.
-  - **Salience Rank:** Nedelina et al . 2017.Salience Rank: Efficient Keyphrase Extraction with Topic Modeling.、
-  - **SIFRank:** Y. Sun, H. Qiu, Y. Zheng, Z. Wang and C. Zhang, "SIFRank: A New Baseline for Unsupervised Keyphrase Extraction Based on Pre-Trained Language Model"
+  - Papagiannopoulou E, Tsoumakas G. A review of keyphrase extraction.

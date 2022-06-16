@@ -58,6 +58,7 @@
 ## Dependencies
 
   - sklearn
+  - scipy==1.6.2
   - jieba==0.42.1
   - networkx==2.5
   - numpy==1.20.1
@@ -112,6 +113,8 @@ pip install -r requirements.txt
 python main.py --alg text_rank
 # PositionRank
 python main.py --alg position_rank
+# TR
+python main.py --alg tr
 # TPR
 python main.py --alg tpr
 # Single TPR
@@ -126,13 +129,14 @@ python main.py
 python main.py --alg salience_rank --data ./data/data.xlsx --topic_num 10 --top_k 20 --alpha 0.2 --lambda_ 0.7
 ```
 
-- `alg`：选择Top PageRank算法，提供四种选择：`text_rank`, `tpr`, `single_tpr`, `salience_rank`
+- `alg`：选择`Rank`算法，选项包括：`text_rank`, `SG_rank`, `position_rank`, `expand_rank`, `tr`, `tpr`, `single_tpr`, `salience_rank`, `embed_rank`, `SIF_rank`
 - `data`：训练数据集路径
 - `topic_num`：确定潜在迪利克雷分配的主题数量
 - `top_k`：每个文档提取关键词的数量
 - `alpha`：`salience_rank`算法的超参数，用于控制语料库特异性和话题特异性之间的权衡，取值位于0到1之间，越趋近于1，话题特异性越明显，越趋近于0，语料库特异性越明显
-- `lambda_`：基于图的Rank算法中PageRank的超参数，取值位于0到1之间
-- `window_size`：共现矩阵的共现窗口大小，针对`position_rank`算法的参数
+- `lambda_`：基于图的Rank算法中`PageRank`的超参数，取值位于0到1之间
+- `window_size`：`PositionRank`算法的参数，共现矩阵的共现窗口大小
+- `max_d`：`TopicRank`算法层次聚类的最大距离
 
 ## Result
 

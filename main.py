@@ -11,7 +11,8 @@
 import argparse
 
 from lda import get_matrix
-from ranks import text_rank, SG_rank, position_rank, expand_rank, tr, tpr, single_tpr, salience_rank, embed_rank, SIF_rank
+from ranks import text_rank, SG_rank, position_rank, expand_rank, tr, tpr, single_tpr, salience_rank, embed_rank, \
+    SIF_rank
 
 from utils import write_to_excel, get_runtime
 
@@ -33,11 +34,14 @@ def args():
                         help="A hyperparameter for PageRank, between 0 and 1")
     parser.add_argument("--window_size", default=6, type=int,
                         help="Co-occurrence window size of co-occurrence matrix")
+    parser.add_argument("--max_d", default=0.75, type=float,
+                        help="Maximum distance of flat clusters from the hierarchical clustering")
     args = parser.parse_args()
     return args
 
 
-def algorithm_switch(arg, topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, txt, article_id, alpha, lambda_, window_size=6):
+def algorithm_switch(arg, topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, txt, article_id, alpha, lambda_,
+                     window_size, max_d):
     if arg == 0:
         return text_rank(txt, lambda_)
     elif arg == 1:
@@ -47,13 +51,14 @@ def algorithm_switch(arg, topic_x_word_matrix, docx_x_topic_matrix, tf_feature_n
     elif arg == 3:
         return expand_rank()
     elif arg == 4:
-        return tr()
+        return tr(txt, max_d, lambda_)
     elif arg == 5:
         return tpr(topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, txt, article_id, lambda_)
     elif arg == 6:
         return single_tpr(topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, txt, article_id, lambda_)
     elif arg == 7:
-        return salience_rank(topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, txt, article_id, alpha, lambda_)
+        return salience_rank(topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, txt, article_id, alpha,
+                             lambda_)
     elif arg == 8:
         return embed_rank()
     elif arg == 9:
@@ -61,7 +66,7 @@ def algorithm_switch(arg, topic_x_word_matrix, docx_x_topic_matrix, tf_feature_n
 
 
 @get_runtime
-def main(arg, data_path, topic_num, top_k, alpha, lambda_, window_size):
+def main(arg, data_path, topic_num, top_k, alpha, lambda_, window_size, max_d):
     data, tf_feature_names, topic_x_word_matrix, docx_x_topic_matrix = get_matrix(topic_num, data_path)
     cut_data = data.content_cut
     all_phrases = []
@@ -69,7 +74,7 @@ def main(arg, data_path, topic_num, top_k, alpha, lambda_, window_size):
         text = text.strip()
         text = text.split(' ')
         phrases = algorithm_switch(arg, topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, text, article_id,
-                                   alpha, lambda_, window_size)
+                                   alpha, lambda_, window_size, max_d)
         phrases_top_k = []
         tk = min(top_k, len(phrases))
         for i in range(tk):
@@ -85,4 +90,5 @@ def main(arg, data_path, topic_num, top_k, alpha, lambda_, window_size):
 
 if __name__ == "__main__":
     args = args()
-    main(algorithms[args.alg], args.data, args.topic_num, args.top_k, args.alpha, args.lambda_, args.window_size)
+    main(algorithms[args.alg], args.data, args.topic_num, args.top_k, args.alpha, args.lambda_, args.window_size,
+         args.max_d)

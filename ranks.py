@@ -11,14 +11,17 @@
 import numpy as np
 from numpy import linalg
 import networkx
-from collections import Counter
+from collections import Counter, defaultdict
 import math
 import copy
+from itertools import product
+from sklearn.feature_extraction.text import CountVectorizer
+from scipy.cluster.hierarchy import linkage, fcluster
 
 from utils import set_graph_edges
 
 
-def text_rank(text, lambda_=0.85):
+def text_rank(text, lambda_):
     """
 
     @param text: list，分词后的文章输入
@@ -42,7 +45,7 @@ def SG_rank():
     raise NotImplemented
 
 
-def position_rank(text, window_size=6, lambda_=0.85):
+def position_rank(text, window_size, lambda_):
     """
 
     @param text: list，分词后的文章输入
@@ -123,11 +126,58 @@ def expand_rank():
     raise NotImplemented
 
 
-def tr():
-    raise NotImplemented
+def tr(text, max_d, lambda_):
+    words = text
+
+    def calc_distance(topic_a, topic_b, position_map):
+        """
+        Calculate distance between 2 topics
+        :param topic_a: list if phrases in a topic A
+        :param topic_b: list if phrases in a topic B
+        :return: int
+        """
+        result = 0
+        for phrase_a in topic_a:
+            for phrase_b in topic_b:
+                if phrase_a != phrase_b:
+                    phrase_a_positions = position_map[phrase_a]
+                    phrase_b_positions = position_map[phrase_b]
+                    for a, b in product(phrase_a_positions, phrase_b_positions):
+                        result += 1 / abs(a - b)
+        return result
+
+    position_map = defaultdict(list)
+
+    # get position info
+    for idx, word in enumerate(words):
+        position_map[word].append(idx)
+
+    # use term freq to convert phrases to vectors for clustering
+    count = CountVectorizer()
+    bag = count.fit_transform(list(position_map.keys()))
+
+    # apply HAC
+    Z = linkage(bag.toarray(), 'average')
+
+    # identify clusters
+    clusters = fcluster(Z, max_d, criterion='distance')
+    cluster_data = defaultdict(list)
+    for n, cluster in enumerate(clusters):
+        cluster_data[cluster].append(' '.join(sorted([str(i) for i in count.inverse_transform(bag.toarray()[n])[0]])))
+    topic_clusters = [frozenset(i) for i in cluster_data.values()]
+
+    topic_graph = networkx.Graph()
+    topic_graph.add_weighted_edges_from(
+        [(v, u, calc_distance(v, u, position_map)) for v in topic_clusters for u in topic_clusters if u != v])
+    ranks = networkx.pagerank(topic_graph, lambda_, weight='weight')
+
+    # sort topic by rank
+    topics = sorted([(b, list(a)) for a, b in ranks.items()], reverse=True)
+    sorted_phrases = [(topic_list[0], score) for score, topic_list in topics]
+    return sorted_phrases
 
 
-def tpr(topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, text, article_id, lambda_=0.85):
+def tpr(topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, text, article_id, lambda_):
     """
 
     @param topic_x_word_matrix: matrix，主题词汇分布矩阵（归一化后的）
@@ -177,7 +227,7 @@ def tpr(topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, text, articl
     return sorted_phrases
 
 
-def single_tpr(topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, text, article_id, lambda_=0.85):
+def single_tpr(topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, text, article_id, lambda_):
     """
 
     @param topic_x_word_matrix: matrix，主题词汇分布矩阵（归一化后的）
@@ -225,7 +275,7 @@ def single_tpr(topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, text,
     return sorted_phrases
 
 
-def salience_rank(topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, text, article_id, alpha=0.3, lambda_=0.85):
+def salience_rank(topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, text, article_id, alpha, lambda_):
     """
 
     @param topic_x_word_matrix: matrix，主题词汇分布矩阵（归一化后的）

@@ -1,6 +1,6 @@
-# Keyphrase Extraction Algorithm based on Graph
+# Keyphrase Extraction Algorithm
 
-**无监督学习**的中文关键词抽取（Keyphrase Extraction）
+基于**无监督学习**的中文关键词抽取（Chinese Keyphrase Extraction）
 
 - 基于统计：TF-IDF，YAKE
 
@@ -58,6 +58,7 @@
 ## Dependencies
 
   - sklearn
+  - gensim==3.8.3
   - scipy==1.6.2
   - jieba==0.42.1
   - networkx==2.5
@@ -121,6 +122,8 @@ python main.py --alg tpr
 python main.py --alg single_tpr
 # Salience Rank
 python main.py
+# EmbedRank
+python main.py --alg embed_rank
 ```
 
 ### Custom
@@ -138,7 +141,48 @@ python main.py --alg salience_rank --data ./data/data.xlsx --topic_num 10 --top_
 - `window_size`：`PositionRank`算法的参数，共现矩阵的共现窗口大小
 - `max_d`：`TopicRank`算法层次聚类的最大距离
 
+### Train Your own Embedding
+
+#### EmbedRank
+
+如果使用`EmbedRank`算法，这里采用`gensim`的[Doc2Vec](https://radimrehurek.com/gensim/auto_examples/tutorials/run_doc2vec_lee.html)训练嵌入矩阵，如果使用你自己的数据，在运行该算法之前，你应该优先执行以下语句：
+
+```shell
+cd model
+# Train Doc2Vec to get Embedding Matrix
+python embed_rank_train.py
+```
+
+训练得到的模型存储在`./model/embed_rank`目录下。
+
+然后回到上一级目录执行：
+
+```shell
+cd ..
+# EmbedRank
+python main.py --alg embed_rank
+```
+
 ## Result
+
+### RunTime
+
+- 包括加载数据到关键词抽取完成
+
+|     Algorithm      | Time(s) |
+| :----------------: | :-----: |
+|      TextRank      |   103   |
+|       SGRank       |    -    |
+| PositionRank（PR） |         |
+|     ExpandRank     |    -    |
+|  TopicRank（TR）   |         |
+|        TPR         |         |
+|     Single TPR     |         |
+|   Salience Rank    |         |
+|     EmbedRank      |   235   |
+|      SIF_rank      |    -    |
+
+
 
 - TextRank前十条数据提取关键词结果
 

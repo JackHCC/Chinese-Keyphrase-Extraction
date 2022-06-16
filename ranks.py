@@ -17,6 +17,7 @@ import copy
 from itertools import product
 from sklearn.feature_extraction.text import CountVectorizer
 from scipy.cluster.hierarchy import linkage, fcluster
+from model.embed_rank import Doc2VecEmbedRank
 
 from utils import set_graph_edges
 
@@ -333,8 +334,13 @@ def salience_rank(topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, te
     return sorted_ranks
 
 
-def embed_rank():
-    raise NotImplemented
+def embed_rank(txt):
+    words = ''.join(txt)
+    model_path = './model/embed_rank/embed_rank_doc2vec.bin'
+    model = Doc2VecEmbedRank(model_path)
+
+    sorted_ranks = sorted(model.extract_keyword(words), key=lambda x: x[1], reverse=True)
+    return sorted_ranks
 
 
 def SIF_rank():

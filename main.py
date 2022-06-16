@@ -60,7 +60,7 @@ def algorithm_switch(arg, topic_x_word_matrix, docx_x_topic_matrix, tf_feature_n
         return salience_rank(topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, txt, article_id, alpha,
                              lambda_)
     elif arg == 8:
-        return embed_rank()
+        return embed_rank(txt)
     elif arg == 9:
         return SIF_rank()
 

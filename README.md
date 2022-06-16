@@ -173,12 +173,12 @@ python main.py --alg embed_rank
 | :----------------: | :-----: |
 |      TextRank      |   103   |
 |       SGRank       |    -    |
-| PositionRank（PR） |         |
+| PositionRank（PR） |   157   |
 |     ExpandRank     |    -    |
-|  TopicRank（TR）   |         |
-|        TPR         |         |
-|     Single TPR     |         |
-|   Salience Rank    |         |
+|  TopicRank（TR）   |   212   |
+|        TPR         |   192   |
+|     Single TPR     |   128   |
+|   Salience Rank    |   108   |
 |     EmbedRank      |   235   |
 |      SIF_rank      |    -    |
 

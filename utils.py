@@ -11,6 +11,7 @@
 from itertools import combinations as combinations
 from queue import Queue
 import time
+import pickle as pkl
 
 WINDOW_SIZE = 2
 
@@ -85,3 +86,15 @@ def get_runtime(fn):
         print("程序运行时间: {} s".format(end_time - start_time))
         return results
     return wrapper
+
+
+def save_pickle(obj, path):
+    file = open(path, 'wb')
+    pkl.dump(obj, file)
+
+
+def read_pickle(path):
+    with open(path, 'rb') as file:
+        obj = pkl.load(file)
+    return obj
+

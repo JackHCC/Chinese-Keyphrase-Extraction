@@ -335,6 +335,11 @@ def salience_rank(topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, te
 
 
 def embed_rank(txt):
+    """
+
+    @param txt: list，分词后的文章输入
+    @return: 该文档的关键词汇得分排序列表
+    """
     words = ''.join(txt)
     model_path = './model/embed_rank/embed_rank_doc2vec.bin'
     model = Doc2VecEmbedRank(model_path)

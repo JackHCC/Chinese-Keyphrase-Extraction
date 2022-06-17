@@ -2,3 +2,6 @@
 __pycache__
 .DS_Store
 result/*.xlsx
+result/*.pickle
+result/*.png
+

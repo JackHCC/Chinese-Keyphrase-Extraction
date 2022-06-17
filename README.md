@@ -58,6 +58,7 @@
 ## Dependencies
 
   - sklearn
+  - matplotlib
   - gensim==3.8.3
   - scipy==1.6.2
   - jieba==0.42.1
@@ -65,7 +66,7 @@
   - numpy==1.20.1
   - pandas==1.2.4
   - matplotlib==3.3.4
-  - queue==0.6.3
+  - queue
 
 ## File
 
@@ -74,6 +75,8 @@
 - `lda.py`：潜在迪利克雷分配
 - `ranks.py`：Topic PageRank算法实现
 - `utils.py`：工具函数
+- `distribution_statistics.py`：关键词输出结果统计
+- `model/`：基于嵌入的算法模型目录
 
 ## Data
 
@@ -182,7 +185,7 @@ python main.py --alg embed_rank
 |     EmbedRank      |   235   |
 |      SIF_rank      |    -    |
 
-
+### Keyphrase Extract
 
 - TextRank前十条数据提取关键词结果
 
@@ -201,6 +204,18 @@ python main.py --alg embed_rank
 ```
 
 - 最终提取结果写入excel表格中，具体在`result`目录下。
+
+### Topic Distribution
+
+获取关键词抽取结果的主题分布，执行下面语句（前提是先根据对应算法生成了对应的结果）
+
+```shell
+python distribution_statistics.py
+```
+
+`Salience Rank`算法抽取关键词Top 6的主题分布结果：
+
+![](./image/key_phrase_salience_rank_topic_distribution.png)
 
 ## Reference
 

@@ -101,13 +101,13 @@ elmoformanylangs
 `config`目录下可以配置：
 
 - `jieba`分词库的自定义词典`jieba_user_dict.txt`，具体参考：[Jieba](https://github.com/fxsjy/jieba#%E8%BD%BD%E5%85%A5%E8%AF%8D%E5%85%B8)
-- 添加停用词（stopwords）`stop_words.txt`
+- 添加停用词（`stopwords`）`stop_words.txt`
 - 添加词性配置`POS_dict.txt`，即设置提取最终关键词的词性筛选，具体词性表参考：[词性表](https://blog.csdn.net/Yellow_python/article/details/83991967)
 
 如果需要使用`SIF_rank`算法，需要加载`elmo`模型和`thulac`模型：
 
-- elmo模型的下载地址：[这里](https://github.com/HIT-SCIR/ELMoForManyLangs)，具体放置参考：[这里](./model/SIF_rank/zhs.model/README.md)
-- thulac模型下载地址：[这里](http://thulac.thunlp.org/)，具体放置参考：[这里](./model/SIF_rank/thulac.models/README.md)
+- `elmo`模型的下载地址：[这里](https://github.com/HIT-SCIR/ELMoForManyLangs)，具体放置参考：[这里](./model/SIF_rank/zhs.model/README.md)
+- `thulac`模型下载地址：[这里](http://thulac.thunlp.org/)，具体放置参考：[这里](./model/SIF_rank/thulac.models/README.md)
 - 百度网盘备份：[这里](https://pan.baidu.com/s/1CblGMgsuyVLBfHZidDvuig?pwd=jack )，提取码：jack
 
 ## Usage

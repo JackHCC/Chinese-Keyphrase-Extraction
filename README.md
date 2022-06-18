@@ -236,7 +236,7 @@ python distribution_statistics.py
 
 如果你需要使用`SIF_rank`算法，该模块用到了`nltk`包，如果你无法根据该包获取`stopwords`或者关于该包的一些其他问题，你可以：
 
-- 前往https://github.com/nltk/nltk_data，下载该仓库
+- 前往 [nltk_data](https://github.com/nltk/nltk_data)，下载该仓库
 - 通过比较可以发现压缩包中的文件结构和`%appdata%/Roaming/nltk_data`下的目录结构是一致的，所以把`packages`里面的东西复制到`%appdata%/Roaming/nltk_data`里面就可以了
 
 ## Reference

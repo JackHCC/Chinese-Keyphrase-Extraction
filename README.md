@@ -56,17 +56,23 @@
 |         SIFRank/SIFRank+         |          基于预训练语言模型的无监督关键词提取新基线          | 2020 | [paper](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8954611) |
 
 ## Dependencies
-
-  - sklearn
-  - matplotlib
-  - gensim==3.8.3
-  - scipy==1.6.2
-  - jieba==0.42.1
-  - networkx==2.5
-  - numpy==1.20.1
-  - pandas==1.2.4
-  - matplotlib==3.3.4
-  - queue
+```txt
+sklearn
+matplotlib
+nltk==3.6.7
+gensim==3.8.3
+scipy==1.5.4
+jieba==0.42.1
+networkx==2.5
+numpy==1.19.5
+xlrd==1.2.0
+openpyxl==3.0.7
+pandas==1.1.5
+matplotlib==3.3.4
+thulac==0.2.1
+overrides==3.1.0
+elmoformanylangs
+```
 
 ## File
 
@@ -98,6 +104,12 @@
 - 添加停用词（stopwords）`stop_words.txt`
 - 添加词性配置`POS_dict.txt`，即设置提取最终关键词的词性筛选，具体词性表参考：[词性表](https://blog.csdn.net/Yellow_python/article/details/83991967)
 
+如果需要使用`SIF_rank`算法，需要加载`elmo`模型和`thulac`模型：
+
+- elmo模型的下载地址：[这里](https://github.com/HIT-SCIR/ELMoForManyLangs)，具体放置参考：[这里](./model/SIF_rank/zhs.model/README.md)
+- thulac模型下载地址：[这里](http://thulac.thunlp.org/)，具体放置参考：[这里](./model/SIF_rank/thulac.models/README.md)
+- 百度网盘备份：[这里](https://pan.baidu.com/s/1CblGMgsuyVLBfHZidDvuig?pwd=jack )，提取码：jack
+
 ## Usage
 
 ### Install
@@ -127,6 +139,8 @@ python main.py --alg single_tpr
 python main.py
 # EmbedRank
 python main.py --alg embed_rank
+# SIFRank(适合单条数据抽取)
+python main.py --alg SIF_rank
 ```
 
 ### Custom
@@ -143,6 +157,7 @@ python main.py --alg salience_rank --data ./data/data.xlsx --topic_num 10 --top_
 - `lambda_`：基于图的Rank算法中`PageRank`的超参数，取值位于0到1之间
 - `window_size`：`PositionRank`算法的参数，共现矩阵的共现窗口大小
 - `max_d`：`TopicRank`算法层次聚类的最大距离
+- `plus`：`SIFRank`算法参数，`True`表示使用`SIFRank+`，`False`表示使用`SIFRank`
 
 ### Train Your own Embedding
 
@@ -174,16 +189,16 @@ python main.py --alg embed_rank
 
 |     Algorithm      | Time(s) |
 | :----------------: | :-----: |
-|      TextRank      |   103   |
+|      TextRank      |   90    |
 |       SGRank       |    -    |
-| PositionRank（PR） |   157   |
+| PositionRank（PR） |   142   |
 |     ExpandRank     |    -    |
 |  TopicRank（TR）   |   212   |
 |        TPR         |   192   |
 |     Single TPR     |   128   |
 |   Salience Rank    |   108   |
 |     EmbedRank      |   235   |
-|      SIF_rank      |    -    |
+|      SIF_rank      |   ++    |
 
 ### Keyphrase Extract
 
@@ -216,6 +231,13 @@ python distribution_statistics.py
 `Salience Rank`算法抽取关键词Top 6的主题分布结果：
 
 ![](./image/key_phrase_salience_rank_topic_distribution.png)
+
+## FAQ
+
+如果你需要使用`SIF_rank`算法，该模块用到了`nltk`包，如果你无法根据该包获取`stopwords`或者关于该包的一些其他问题，你可以：
+
+- 前往https://github.com/nltk/nltk_data，下载该仓库
+- 通过比较可以发现压缩包中的文件结构和`%appdata%/Roaming/nltk_data`下的目录结构是一致的，所以把`packages`里面的东西复制到`%appdata%/Roaming/nltk_data`里面就可以了
 
 ## Reference
 

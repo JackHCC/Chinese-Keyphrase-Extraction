@@ -17,6 +17,7 @@ import copy
 from itertools import product
 from sklearn.feature_extraction.text import CountVectorizer
 from scipy.cluster.hierarchy import linkage, fcluster
+
 from model.embed_rank import Doc2VecEmbedRank
 
 from utils import set_graph_edges
@@ -246,7 +247,8 @@ def single_tpr(topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, text,
     graph.add_nodes_from(set(words))
     set_graph_edges(graph, words, words)
 
-    pt_new_dim = docx_x_topic_matrix[article_id, :] / sum(docx_x_topic_matrix[article_id, :])  # topic distribution for one doc
+    pt_new_dim = docx_x_topic_matrix[article_id, :] / sum(
+        docx_x_topic_matrix[article_id, :])  # topic distribution for one doc
     pt_new_dim = pt_new_dim[None, :]
     weights = np.dot(topic_x_word_matrix.T, pt_new_dim.T)
     weights = weights / linalg.norm(pt_new_dim, 'fro')  # cos similarity normalization
@@ -334,13 +336,13 @@ def salience_rank(topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, te
     return sorted_ranks
 
 
-def embed_rank(txt):
+def embed_rank(text):
     """
 
-    @param txt: list，分词后的文章输入
+    @param text: list，分词后的文章输入
     @return: 该文档的关键词汇得分排序列表
     """
-    words = ''.join(txt)
+    words = text
     model_path = './model/embed_rank/embed_rank_doc2vec.bin'
     model = Doc2VecEmbedRank(model_path)
 
@@ -348,5 +350,27 @@ def embed_rank(txt):
     return sorted_ranks
 
 
-def SIF_rank():
-    raise NotImplemented
+def SIF_rank(text, plus=True, lambda_=0.8, elmo_layers_weight=[0.0, 1.0, 0.0]):
+    import thulac
+    from model.SIF_rank.Embedding import WordEmbeddings, SentEmbeddings
+    from model.SIF_rank.sif_rank import SIFRank, SIFRank_plus
+
+    words = text.replace("\n", "").replace("\t", "")
+
+    # download from https://github.com/HIT-SCIR/ELMoForManyLangs
+    model_file = r'./model/SIF_rank/zhs.model/'
+
+    elmo = WordEmbeddings(model_file)
+    sif = SentEmbeddings(elmo, weightfile_pretrain='./model/SIF_rank/dict.txt',
+                         weightfile_finetune='./model/SIF_rank/dict.txt', lamda=lambda_)
+
+    # download from http://thulac.thunlp.org/
+    zh_model = thulac.thulac(model_path=r'./model/SIF_rank/thulac.models/', user_dict=r'./config/jieba_user_dict.txt')
+
+    if plus:
+        sorted_ranks = SIFRank_plus(words, sif, zh_model, elmo_layers_weight=elmo_layers_weight)
+
+    else:
+        sorted_ranks = SIFRank(words, sif, zh_model, elmo_layers_weight=elmo_layers_weight)
+
+    return sorted_ranks

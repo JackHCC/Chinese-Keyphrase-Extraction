@@ -4,4 +4,7 @@ __pycache__
 result/*.xlsx
 result/*.pickle
 result/*.png
+model/SIF_rank/zhs.model/*.pkl
+model/SIF_rank/thulac.models/*.bin
+model/SIF_rank/thulac.models/*.dat
 

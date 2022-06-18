@@ -36,12 +36,14 @@ def args():
                         help="Co-occurrence window size of co-occurrence matrix")
     parser.add_argument("--max_d", default=0.75, type=float,
                         help="Maximum distance of flat clusters from the hierarchical clustering")
+    parser.add_argument("--plus", default=True, type=bool,
+                        help="A hyperparameter for SIFRank, True is using SIFRank+, False is using SIFRank")
     args = parser.parse_args()
     return args
 
 
 def algorithm_switch(arg, topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, txt, article_id, alpha, lambda_,
-                     window_size, max_d):
+                     window_size, max_d, plus):
     if arg == 0:
         return text_rank(txt, lambda_)
     elif arg == 1:
@@ -62,19 +64,22 @@ def algorithm_switch(arg, topic_x_word_matrix, docx_x_topic_matrix, tf_feature_n
     elif arg == 8:
         return embed_rank(txt)
     elif arg == 9:
-        return SIF_rank()
+        return SIF_rank(txt, plus)
 
 
 @get_runtime
-def main(arg, data_path, topic_num, top_k, alpha, lambda_, window_size, max_d):
+def main(arg, data_path, topic_num, top_k, alpha, lambda_, window_size, max_d, plus):
     data, tf_feature_names, topic_x_word_matrix, docx_x_topic_matrix = get_matrix(topic_num, data_path)
-    cut_data = data.content_cut
+    # 基于嵌入的Rank算法
+    cut_data = data.content_cut if arg != 9 else data.content
+
     all_phrases = []
     for article_id, text in enumerate(cut_data):
         text = text.strip()
-        text = text.split(' ')
-        phrases = algorithm_switch(arg, topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, text, article_id,
-                                   alpha, lambda_, window_size, max_d)
+        text = text.split(' ') if arg != 9 else text
+
+        phrases = algorithm_switch(arg, topic_x_word_matrix, docx_x_topic_matrix, tf_feature_names, text,
+                                   article_id, alpha, lambda_, window_size, max_d, plus)
         phrases_top_k = []
         tk = min(top_k, len(phrases))
         for i in range(tk):
@@ -91,4 +96,4 @@ def main(arg, data_path, topic_num, top_k, alpha, lambda_, window_size, max_d):
 if __name__ == "__main__":
     args = args()
     main(algorithms[args.alg], args.data, args.topic_num, args.top_k, args.alpha, args.lambda_, args.window_size,
-         args.max_d)
+         args.max_d, args.plus)

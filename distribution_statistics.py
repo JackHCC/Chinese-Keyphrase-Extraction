@@ -35,6 +35,43 @@ def get_topic_and_keyword(path):
     return topic_keyword_list
 
 
+def topic_statistic(topic_keyword_list):
+    topic_set = set()
+    keyword_vocab = {}
+    topic_keyword_count = defaultdict(dict)
+    for topic, keywords in topic_keyword_list:
+        topic_set.add(topic)
+        for keyword in keywords:
+            keyword_vocab[keyword] = keyword_vocab.get(keyword, 0) + 1
+            topic_keyword_count[topic][keyword] = topic_keyword_count[topic].get(keyword, 0) + 1
+
+    for word in list(topic_keyword_count.keys()):
+        for topic, topic_dict in topic_keyword_count.items():
+            if word not in list(topic_keyword_count[topic].keys()):
+                topic_keyword_count[topic][word] = 0
+
+    topic_set = {topic: idx for idx, topic in enumerate(topic_set)}
+
+    return topic_set, keyword_vocab, topic_keyword_count
+
+
+def get_topic_topk_words(topic_keyword_count, k=10):
+    top_k_dict = {}
+    for topic, keywords_dict in topic_keyword_count.items():
+        keywords_dict_counter = Counter(keywords_dict)
+        topk_words = keywords_dict_counter.most_common(k)
+        top_k_dict[topic] = topk_words
+
+    return top_k_dict
+
+
+def show_topic_topk_words(top_k_dict):
+    for topic, word_count in top_k_dict.items():
+        words = [word for word, count in word_count]
+        words_str = ";".join(words)
+        print("主题：", topic, " Top-" + str(len(words)) + "关键词：", words_str)
+
+
 def keyword_statistic(topic_keyword_list):
     topic_set = set()
     keyword_vocab = {}
@@ -100,6 +137,11 @@ if __name__ == "__main__":
     read_path = "./result/key_phrase_salience_rank.xlsx"
     topic_keyword = get_topic_and_keyword(read_path)
     topics, keywords, keyword_topic = keyword_statistic(topic_keyword)
+
+    _, _, topic_keyword = topic_statistic(topic_keyword)
+    topic_topk_keyword = get_topic_topk_words(topic_keyword)
+    show_topic_topk_words(topic_topk_keyword)
+
     topic_distribution, keyword_dict = get_topic_distribution(keyword_topic, topics)
     root_path = read_path[:-5]
     save_pickle(topic_distribution, root_path + "_topic_distribution.pickle")
